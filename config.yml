@@ -1,0 +1,20 @@
+gateways:
+  dev:
+    connection:
+      type: duckdb
+      concurrent_tasks: 1
+      register_comments: true
+      pre_ping: false
+      pretty_sql: false
+      database: jaffle_shop.duckdb
+      extensions: []
+      connector_config: {}
+      secrets: []
+      filesystems: []
+    state_schema: sqlmesh
+    variables: {}
+model_defaults:
+  dialect: duckdb
+variables:
+  __dbt_packages__: {}
+  __dbt_project_name__: jaffle_shop
