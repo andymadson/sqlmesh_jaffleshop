@@ -6,16 +6,10 @@ MODEL (
   kind FULL,
   depends_on (main.customers, main.stg_orders, main.stg_payments),
   audits (
-    UNIQUE_ORDERS_ORDER_ID(),
-    NOT_NULL_ORDERS_ORDER_ID(),
-    NOT_NULL_ORDERS_CUSTOMER_ID(),
+    unique_values(columns = (order_id)),
+    not_null(columns = (order_id, customer_id, credit_card_amount, coupon_amount, bank_transfer_amount, gift_card_amount, amount)),
     RELATIONSHIPS_ORDERS_CUSTOMER_ID__CUSTOMER_ID__REF_CUSTOMERS_(),
-    ACCEPTED_VALUES_ORDERS_STATUS__PLACED__SHIPPED__COMPLETED__RETURN_PENDING__RETURNED(),
-    NOT_NULL_ORDERS_AMOUNT(),
-    NOT_NULL_ORDERS_CREDIT_CARD_AMOUNT(),
-    NOT_NULL_ORDERS_COUPON_AMOUNT(),
-    NOT_NULL_ORDERS_BANK_TRANSFER_AMOUNT(),
-    NOT_NULL_ORDERS_GIFT_CARD_AMOUNT()
+    accepted_values(column = status, is_in = ['placed', 'shipped', 'completed', 'return_pending', 'returned'])
   ),
   allow_partials TRUE
 );
@@ -71,14 +65,6 @@ final as (
 select * from final
 JINJA_END;
 
-AUDIT (
-  name not_null_orders_order_id
-);
-SELECT
-  "order_id" AS "order_id"
-FROM "jaffle_shop"."main"."orders" AS "orders"
-WHERE
-  "order_id" IS NULL;
 
 AUDIT (
   name relationships_orders_customer_id__customer_id__ref_customers_
@@ -101,88 +87,3 @@ LEFT JOIN "parent" AS "parent"
   ON "child"."from_field" = "parent"."to_field"
 WHERE
   "parent"."to_field" IS NULL;
-
-AUDIT (
-  name unique_orders_order_id
-);
-SELECT
-  "order_id" AS "unique_field",
-  COUNT(*) AS "n_records"
-FROM "jaffle_shop"."main"."orders" AS "orders"
-WHERE
-  NOT "order_id" IS NULL
-GROUP BY
-  "order_id"
-HAVING
-  COUNT(*) > 1;
-
-AUDIT (
-  name not_null_orders_credit_card_amount
-);
-SELECT
-  "credit_card_amount" AS "credit_card_amount"
-FROM "jaffle_shop"."main"."orders" AS "orders"
-WHERE
-  "credit_card_amount" IS NULL;
-
-AUDIT (
-  name not_null_orders_gift_card_amount
-);
-SELECT
-  "gift_card_amount" AS "gift_card_amount"
-FROM "jaffle_shop"."main"."orders" AS "orders"
-WHERE
-  "gift_card_amount" IS NULL;
-
-AUDIT (
-  name not_null_orders_coupon_amount
-);
-SELECT
-  "coupon_amount" AS "coupon_amount"
-FROM "jaffle_shop"."main"."orders" AS "orders"
-WHERE
-  "coupon_amount" IS NULL;
-
-AUDIT (
-  name not_null_orders_bank_transfer_amount
-);
-SELECT
-  "bank_transfer_amount" AS "bank_transfer_amount"
-FROM "jaffle_shop"."main"."orders" AS "orders"
-WHERE
-  "bank_transfer_amount" IS NULL;
-
-AUDIT (
-  name not_null_orders_amount
-);
-SELECT
-  "amount" AS "amount"
-FROM "jaffle_shop"."main"."orders" AS "orders"
-WHERE
-  "amount" IS NULL;
-
-AUDIT (
-  name not_null_orders_customer_id
-);
-SELECT
-  "customer_id" AS "customer_id"
-FROM "jaffle_shop"."main"."orders" AS "orders"
-WHERE
-  "customer_id" IS NULL;
-
-AUDIT (
-  name accepted_values_orders_status__placed__shipped__completed__return_pending__returned
-);
-WITH "all_values" AS (
-  SELECT
-    "status" AS "value_field",
-    COUNT(*) AS "n_records"
-  FROM "jaffle_shop"."main"."orders" AS "orders"
-  GROUP BY
-    "status"
-)
-SELECT
-  *
-FROM "all_values" AS "all_values"
-WHERE
-  NOT "value_field" IN ('placed', 'shipped', 'completed', 'return_pending', 'returned');
