@@ -2,12 +2,7 @@ MODEL (
   name main.stg_payments,
   start '2025-01-01',
   dialect duckdb,
-  depends_on (main.raw_payments),
-  audits (
-    UNIQUE_STG_PAYMENTS_PAYMENT_ID(),
-    NOT_NULL_STG_PAYMENTS_PAYMENT_ID(),
-    ACCEPTED_VALUES_STG_PAYMENTS_PAYMENT_METHOD__CREDIT_CARD__COUPON__BANK_TRANSFER__GIFT_CARD()
-  )
+  depends_on (main.raw_payments)
 );
 WITH source AS (
   SELECT
@@ -26,41 +21,24 @@ SELECT
 FROM renamed;
 
 AUDIT (
-  name not_null_stg_payments_payment_id
+  name unique_payment_id
 );
-SELECT
-  "payment_id" AS "payment_id"
-FROM "jaffle_shop"."main"."stg_payments" AS "stg_payments"
-WHERE
-  "payment_id" IS NULL;
+SELECT payment_id
+FROM @this_model
+WHERE payment_id IS NOT NULL
+GROUP BY payment_id
+HAVING COUNT(*) > 1;
 
 AUDIT (
-  name unique_stg_payments_payment_id
+  name not_null_payment_id
 );
-SELECT
-  "payment_id" AS "unique_field",
-  COUNT(*) AS "n_records"
-FROM "jaffle_shop"."main"."stg_payments" AS "stg_payments"
-WHERE
-  NOT "payment_id" IS NULL
-GROUP BY
-  "payment_id"
-HAVING
-  COUNT(*) > 1;
+SELECT *
+FROM @this_model
+WHERE payment_id IS NULL;
 
 AUDIT (
-  name accepted_values_stg_payments_payment_method__credit_card__coupon__bank_transfer__gift_card
+  name accepted_payment_methods
 );
-WITH "all_values" AS (
-  SELECT
-    "payment_method" AS "value_field",
-    COUNT(*) AS "n_records"
-  FROM "jaffle_shop"."main"."stg_payments" AS "stg_payments"
-  GROUP BY
-    "payment_method"
-)
-SELECT
-  *
-FROM "all_values" AS "all_values"
-WHERE
-  NOT "value_field" IN ('credit_card', 'coupon', 'bank_transfer', 'gift_card');
+SELECT *
+FROM @this_model
+WHERE payment_method NOT IN ('credit_card', 'coupon', 'bank_transfer', 'gift_card');

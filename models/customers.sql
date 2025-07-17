@@ -5,7 +5,6 @@ MODEL (
   dialect duckdb,
   kind FULL,
   depends_on (main.stg_customers, main.stg_orders, main.stg_payments),
-  audits (UNIQUE_CUSTOMERS_CUSTOMER_ID(), NOT_NULL_CUSTOMERS_CUSTOMER_ID()),
   allow_partials TRUE
 );
 WITH customers AS (
@@ -58,24 +57,17 @@ SELECT
 FROM final;
 
 AUDIT (
-  name not_null_customers_customer_id
+  name unique_customer_id
 );
-SELECT
-  "customer_id" AS "customer_id"
-FROM "jaffle_shop"."main"."customers" AS "customers"
-WHERE
-  "customer_id" IS NULL;
+SELECT customer_id
+FROM @this_model
+WHERE customer_id IS NOT NULL
+GROUP BY customer_id
+HAVING COUNT(*) > 1;
 
 AUDIT (
-  name unique_customers_customer_id
+  name not_null_customer_id
 );
-SELECT
-  "customer_id" AS "unique_field",
-  COUNT(*) AS "n_records"
-FROM "jaffle_shop"."main"."customers" AS "customers"
-WHERE
-  NOT "customer_id" IS NULL
-GROUP BY
-  "customer_id"
-HAVING
-  COUNT(*) > 1;
+SELECT *
+FROM @this_model
+WHERE customer_id IS NULL;
