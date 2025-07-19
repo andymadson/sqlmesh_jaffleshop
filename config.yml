@@ -18,3 +18,10 @@ model_defaults:
 variables:
   __dbt_packages__: {}
   __dbt_project_name__: jaffle_shop
+linter:
+  enabled: true
+  rules:
+    - ambiguousorinvalidcolumn
+    - invalidselectstarexpansion
+  warn_rules: 
+    - noselectstar

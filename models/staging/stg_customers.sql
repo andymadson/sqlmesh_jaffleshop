@@ -2,12 +2,19 @@ MODEL (
   name main.stg_customers,
   start '2025-01-01',
   dialect duckdb,
-  depends_on (main.raw_customers),
+  depends_on (
+    main.raw_customers
+  ),
   audits (
-    unique_values(columns = (customer_id)),
-    not_null(columns = (customer_id))
+    UNIQUE_VALUES(columns = (
+      customer_id
+    )),
+    NOT_NULL(columns = (
+      customer_id
+    ))
   )
 );
+
 WITH source AS (
   SELECT
     *
@@ -21,4 +28,4 @@ WITH source AS (
 )
 SELECT
   *
-FROM renamed;
+FROM renamed

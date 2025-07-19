@@ -1,0 +1,107 @@
+test_payment_total:
+  model: main.payment_total
+  inputs:
+    main.orders:
+      rows:
+        # Test case 1: All payment methods have values, total matches
+        - order_id: 1
+          customer_id: 1
+          order_date: 2018-01-01
+          status: completed
+          credit_card_amount: 10.0
+          coupon_amount: 5.0
+          bank_transfer_amount: 3.0
+          gift_card_amount: 2.0
+          amount: 20.0
+        
+        # Test case 2: Only credit card payment, total matches
+        - order_id: 2
+          customer_id: 2
+          order_date: 2018-01-02
+          status: completed
+          credit_card_amount: 50.0
+          coupon_amount: 0.0
+          bank_transfer_amount: 0.0
+          gift_card_amount: 0.0
+          amount: 50.0
+        
+        # Test case 3: Mixed payments, total doesn't match (off by more than 0.01)
+        - order_id: 3
+          customer_id: 3
+          order_date: 2018-01-03
+          status: completed
+          credit_card_amount: 25.0
+          coupon_amount: 10.0
+          bank_transfer_amount: 0.0
+          gift_card_amount: 5.0
+          amount: 45.0
+        
+        # Test case 4: Total matches within 0.01 tolerance (rounding test)
+        - order_id: 4
+          customer_id: 4
+          order_date: 2018-01-04
+          status: completed
+          credit_card_amount: 10.33
+          coupon_amount: 10.33
+          bank_transfer_amount: 10.33
+          gift_card_amount: 0.0
+          amount: 31.0
+        
+        # Test case 5: All zeros
+        - order_id: 5
+          customer_id: 5
+          order_date: 2018-01-05
+          status: returned
+          credit_card_amount: 0.0
+          coupon_amount: 0.0
+          bank_transfer_amount: 0.0
+          gift_card_amount: 0.0
+          amount: 0.0
+  
+  outputs:
+    query:
+      rows:
+        - order_id: 1
+          credit_card_amount: 10.0
+          coupon_amount: 5.0
+          bank_transfer_amount: 3.0
+          gift_card_amount: 2.0
+          amount: 20.0
+          calculated_total: 20.0
+          amounts_match: true
+        
+        - order_id: 2
+          credit_card_amount: 50.0
+          coupon_amount: 0.0
+          bank_transfer_amount: 0.0
+          gift_card_amount: 0.0
+          amount: 50.0
+          calculated_total: 50.0
+          amounts_match: true
+        
+        - order_id: 3
+          credit_card_amount: 25.0
+          coupon_amount: 10.0
+          bank_transfer_amount: 0.0
+          gift_card_amount: 5.0
+          amount: 45.0
+          calculated_total: 40.0
+          amounts_match: false
+        
+        - order_id: 4
+          credit_card_amount: 10.33
+          coupon_amount: 10.33
+          bank_transfer_amount: 10.33
+          gift_card_amount: 0.0
+          amount: 31.0
+          calculated_total: 30.99
+          amounts_match: true
+        
+        - order_id: 5
+          credit_card_amount: 0.0
+          coupon_amount: 0.0
+          bank_transfer_amount: 0.0
+          gift_card_amount: 0.0
+          amount: 0.0
+          calculated_total: 0.0
+          amounts_match: true

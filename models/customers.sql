@@ -6,11 +6,16 @@ MODEL (
   kind FULL,
   depends_on (main.stg_customers, main.stg_orders, main.stg_payments),
   audits (
-    unique_values(columns = (customer_id)),
-    not_null(columns = (customer_id))
+    UNIQUE_VALUES(columns = (
+      customer_id
+    )),
+    NOT_NULL(columns = (
+      customer_id
+    ))
   ),
   allow_partials TRUE
 );
+
 WITH customers AS (
   SELECT
     *
@@ -58,4 +63,4 @@ WITH customers AS (
 )
 SELECT
   *
-FROM final;
+FROM final

@@ -6,13 +6,29 @@ MODEL (
   kind FULL,
   depends_on (main.customers, main.stg_orders, main.stg_payments),
   audits (
-    unique_values(columns = (order_id)),
-    not_null(columns = (order_id, customer_id, credit_card_amount, coupon_amount, bank_transfer_amount, gift_card_amount, amount)),
+    UNIQUE_VALUES(columns = (
+      order_id
+    )),
+    NOT_NULL(
+      columns = (
+        order_id,
+        customer_id,
+        credit_card_amount,
+        coupon_amount,
+        bank_transfer_amount,
+        gift_card_amount,
+        amount
+      )
+    ),
     RELATIONSHIPS_ORDERS_CUSTOMER_ID__CUSTOMER_ID__REF_CUSTOMERS_(),
-    accepted_values(column = status, is_in = ['placed', 'shipped', 'completed', 'return_pending', 'returned'])
+    ACCEPTED_VALUES(
+      "column" = status,
+      is_in = ['placed', 'shipped', 'completed', 'return_pending', 'returned']
+    )
   ),
   allow_partials TRUE
 );
+
 JINJA_QUERY_BEGIN;
 {% set payment_methods = ['credit_card', 'coupon', 'bank_transfer', 'gift_card'] %}
 
@@ -63,12 +79,12 @@ final as (
 )
 
 select * from final
-JINJA_END;
-
+JINJA_END;;
 
 AUDIT (
   name relationships_orders_customer_id__customer_id__ref_customers_
 );
+
 WITH "child" AS (
   SELECT
     "customer_id" AS "from_field"
@@ -86,4 +102,4 @@ FROM "child" AS "child"
 LEFT JOIN "parent" AS "parent"
   ON "child"."from_field" = "parent"."to_field"
 WHERE
-  "parent"."to_field" IS NULL;
+  "parent"."to_field" IS NULL

@@ -12,4 +12,4 @@ MODEL (
     payment_method TEXT,
     amount INT
   )
-);
+)
