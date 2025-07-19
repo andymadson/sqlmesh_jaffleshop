@@ -12,4 +12,4 @@ MODEL (
     order_date DATE,
     status TEXT
   )
-);
+)

@@ -2,13 +2,21 @@ MODEL (
   name main.stg_payments,
   start '2025-01-01',
   dialect duckdb,
-  depends_on (main.raw_payments),
+  depends_on (
+    main.raw_payments
+  ),
   audits (
-    unique_values(columns = (payment_id)),
-    not_null(columns = (payment_id, payment_method)),
-    accepted_values(column = payment_method, is_in = ['credit_card', 'coupon', 'bank_transfer', 'gift_card'])
+    UNIQUE_VALUES(columns = (
+      payment_id
+    )),
+    NOT_NULL(columns = (payment_id, payment_method)),
+    ACCEPTED_VALUES(
+      "column" = payment_method,
+      is_in = ['credit_card', 'coupon', 'bank_transfer', 'gift_card']
+    )
   )
 );
+
 WITH source AS (
   SELECT
     *
@@ -23,4 +31,4 @@ WITH source AS (
 )
 SELECT
   *
-FROM renamed;
+FROM renamed

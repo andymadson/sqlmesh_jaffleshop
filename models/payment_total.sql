@@ -1,6 +1,9 @@
 MODEL (
   name main.payment_total,
-  depends_on (main.orders)
+  depends_on (
+    main.orders
+  ),
+  grain order_id
 );
 
 JINJA_QUERY_BEGIN;
