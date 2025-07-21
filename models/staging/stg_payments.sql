@@ -2,6 +2,7 @@ MODEL (
   name main.stg_payments,
   start '2025-01-01',
   dialect duckdb,
+  grain payment_id,
   depends_on (
     main.raw_payments
   ),
@@ -26,9 +27,14 @@ WITH source AS (
     id AS payment_id,
     order_id,
     payment_method,
-    amount /* `amount` is currently stored in cents, so we convert it to dollars */ / 100 AS amount
+    amount /* `amount` is currently stored in cents, so we convert it to dollars */ / 100 AS amount,
+    if (payment_method = 'coupon', 'true', 'false') AS discounted
   FROM source
 )
 SELECT
-  *
+  payment_id,
+  order_id,
+  payment_method,
+  amount,
+  discounted
 FROM renamed
