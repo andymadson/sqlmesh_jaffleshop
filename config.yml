@@ -13,6 +13,11 @@ gateways:
       filesystems: []
     state_schema: sqlmesh
     variables: {}
+  prod:
+    connection:
+      type: duckdb
+      database: jaffle_shop.duckdb
+    state_schema: sqlmesh
 model_defaults:
   dialect: duckdb
 variables:
@@ -25,3 +30,12 @@ linter:
     - invalidselectstarexpansion
   warn_rules: 
     - noselectstar
+users:
+  - username: andymadson
+    github_username: andymadson
+    roles:
+      - required_approver
+
+cicd_bot:
+  type: github
+  merge_method: squash  # or 'merge' or 'rebase'
