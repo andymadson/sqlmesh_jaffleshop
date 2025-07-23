@@ -38,4 +38,5 @@ users:
 
 cicd_bot:
   type: github
-  merge_method: squash  # or 'merge' or 'rebase'
+  merge_method: squash
+  enable_deploy_command: true
