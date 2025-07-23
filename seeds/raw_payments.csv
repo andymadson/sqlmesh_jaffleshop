@@ -118,3 +118,8 @@ id,order_id,payment_method,amount
 117,103,bank_transfer,1000
 118,104,credit_card,2900
 119,105,credit_card,2900
+120,106,credit_card,2000
+121,107,coupon,1500
+122,108,bank_transfer,1800
+123,109,gift_card,2200
+124,110,credit_card,2500

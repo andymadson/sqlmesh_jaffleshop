@@ -5,6 +5,7 @@ MODEL (
   depends_on (
     main.raw_customers
   ),
+  kind FULL,
   audits (
     UNIQUE_VALUES(columns = (
       customer_id
