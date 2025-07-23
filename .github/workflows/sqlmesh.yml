@@ -1,49 +1,30 @@
-name: SQLMesh Bot
-run-name: 🚀SQLMesh Bot 🚀
-on:
-  pull_request:
-    types: [synchronize, opened, closed]
-  pull_request_review:
-    types: [submitted, edited, dismissed]
-  push:
-    branches: [main]
+name: SQLMesh Plan Bot
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
-  cancel-in-progress: true
+on:
+  push:
+    branches:
+      - main
+      - dev
 
 jobs:
   sqlmesh:
-    name: SQLMesh Actions Workflow
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-      checks: write
-      pull-requests: write
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: Checkout PR branch
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == false
-        uses: actions/checkout@v4
-        with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
-      - name: Checkout main branch
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/checkout@v4
-        with:
-          ref: main
+
       - name: Install SQLMesh + Dependencies
         run: pip install -r requirements.txt
-        shell: bash
-      - name: Run CI/CD Bot
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == false
-        run: |
-          sqlmesh_cicd -p ${{ github.workspace }} github --token ${{ secrets.GITHUB_TOKEN }} run-all
-      - name: Deploy to Production
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          sqlmesh_cicd -p ${{ github.workspace }} github --token ${{ secrets.GITHUB_TOKEN }} deploy-production
+        working-directory: sqlmesh-jaffle-shop
+      - name: Run SQLMesh Plan
+        run: sqlmesh plan
+        working-directory: sqlmesh-jaffle-shop
+
+      # Optionally, auto-apply the plan
+      # - name: Apply SQLMesh Plan
+      #   run: sqlmesh apply
