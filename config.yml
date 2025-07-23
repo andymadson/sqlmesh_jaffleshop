@@ -35,3 +35,4 @@ cicd_bot:
   merge_method: squash
   enable_deploy_command: true
   skip_pr_environment: true
+  skip_pr_backfill: false
