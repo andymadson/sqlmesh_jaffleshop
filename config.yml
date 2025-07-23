@@ -45,5 +45,4 @@ cicd_bot:
   skip_pr_backfill: true
   run_on_deploy_to_prod: false
   prod_branch_name: production
-  skip_pr_environment: true
 
