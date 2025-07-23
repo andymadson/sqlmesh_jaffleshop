@@ -1,5 +1,5 @@
 MODEL (
-  name main.payment_total,
+  name main.payment_total_test,
   depends_on (
     main.orders
   ),
