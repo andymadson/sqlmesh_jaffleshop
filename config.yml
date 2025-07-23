@@ -34,4 +34,5 @@ cicd_bot:
   type: github
   merge_method: squash
   enable_deploy_command: true
+  skip_pr_environment: true
   skip_pr_backfill: false

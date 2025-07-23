@@ -1,3 +1,4 @@
 sqlmesh[dbt,github,lsp]==0.202.1
 agate
+dbt-core
 dbt-duckdb
