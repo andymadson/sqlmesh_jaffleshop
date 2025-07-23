@@ -1,10 +1,8 @@
-name: SQLMesh Plan Bot
+name: SQLMesh Bot
 
 on:
-  push:
-    branches:
-      - main
-      - dev
+  pull_request:
+    types: [synchronize, opened]
 
 jobs:
   sqlmesh:
@@ -12,19 +10,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-
+      - name: List files
+        run: ls -R
       - name: Install SQLMesh + Dependencies
         run: pip install -r requirements.txt
-        working-directory: sqlmesh-jaffle-shop
       - name: Run SQLMesh Plan
         run: sqlmesh plan
-        working-directory: sqlmesh-jaffle-shop
-
-      # Optionally, auto-apply the plan
-      # - name: Apply SQLMesh Plan
-      #   run: sqlmesh apply
