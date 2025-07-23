@@ -13,7 +13,7 @@ SELECT
     coupon_amount,
     bank_transfer_amount,
     gift_card_amount,
-    amount,
+    amount as total_amount,
     {{ calculate_payment_totals() }}  -- This adds 2 columns
 FROM main.orders
 JINJA_END;
