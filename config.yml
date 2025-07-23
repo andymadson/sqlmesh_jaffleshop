@@ -44,5 +44,4 @@ cicd_bot:
   default_pr_start: "1 week ago"
   skip_pr_backfill: true
   run_on_deploy_to_prod: false
-  prod_branch_name: production
-
+  prod_branch_name: main
