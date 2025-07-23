@@ -32,6 +32,16 @@ linter:
     - noselectstar
 cicd_bot:
   type: github
-  merge_method: squash
+  invalidate_environment_after_deploy: false
   enable_deploy_command: true
-  skip_pr_environment: true
+  merge_method: squash
+  command_namespace: "#SQLMesh"
+  auto_categorize_changes:
+    external: full
+    python: full
+    sql: full
+    seed: full
+  default_pr_start: "1 week ago"
+  skip_pr_backfill: false
+  run_on_deploy_to_prod: false
+  prod_branch_name: production
