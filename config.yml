@@ -45,8 +45,3 @@ cicd_bot:
   skip_pr_backfill: true
   run_on_deploy_to_prod: false
   prod_branch_name: main
-users:
-     - username: andymadson
-       github_username: andymadson
-       roles:
-         - required_approver
