@@ -27,12 +27,14 @@ WITH source AS (
     id AS payment_id,
     order_id,
     payment_method,
-    amount /* `amount` is currently stored in cents, so we convert it to dollars */ / 100 AS amount
+    amount /* `amount` is currently stored in cents, so we convert it to dollars */ / 100 AS amount,
+    if (payment_method = 'coupon', 'true', 'false') AS discounted
   FROM source
 )
 SELECT
   payment_id,
   order_id,
   payment_method,
-  amount
+  amount,
+  discounted
 FROM renamed
