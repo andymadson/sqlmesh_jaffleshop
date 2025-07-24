@@ -27,7 +27,7 @@ jobs:
       issues: write
       checks: write
       pull-requests: write
-    steps:
+        steps:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -39,7 +39,7 @@ jobs:
       - name: Install SQLMesh + Dependencies
         run: pip install -r requirements.txt
         shell: bash
-     - name: Update SQLMesh
+      - name: Update SQLMesh
         run: sqlmesh migrate
         shell: bash
       - name: Run CI/CD Bot
