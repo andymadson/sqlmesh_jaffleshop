@@ -42,9 +42,6 @@ jobs:
       - name: Update SQLMesh
         run: sqlmesh migrate
         shell: bash
-      - name: sqlmesh plan --include-unmodified
-        run: sqlmesh plan --include-unmodified
-        shell: bash
       - name: Run CI/CD Bot
         run: |
           sqlmesh_cicd -p ${{ github.workspace }} github --token ${{ secrets.GITHUB_TOKEN }} run-all
