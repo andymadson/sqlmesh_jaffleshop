@@ -41,8 +41,6 @@ jobs:
         shell: bash
       - name: Run CI/CD Bot
         run: |
-          sqlmesh_cicd -p ${{ github.workspace }} github --token ${{ secrets.GITHUB_TOKEN }} run-tests
+          sqlmesh_cicd -p ${{ github.workspace }} github --token ${{ secrets.GITHUB_TOKEN }} run-all
       - name: Deploy to Production and Merge
         if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
-        run: |
-          sqlmesh_cicd -p ${{ github.workspace }} github --token ${{ secrets.GITHUB_TOKEN }} deploy-production
