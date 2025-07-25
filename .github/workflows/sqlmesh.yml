@@ -32,10 +32,21 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
+      - name: Get PR number
+        id: get_pr
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "issue_comment" ]]; then
+            echo "pr_number=$(jq --raw-output .issue.pull_request.url $GITHUB_EVENT_PATH | grep -o '[0-9]*$')" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "pull_request_review" ]]; then
+            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+          ref: refs/pull/${{ steps.get_pr.outputs.pr_number }}/merge
       - name: Install SQLMesh + Dependencies
         run: pip install -r requirements.txt
         shell: bash
