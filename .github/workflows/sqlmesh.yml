@@ -3,9 +3,18 @@ run-name: 🚀SQLMesh Bot 🚀
 on:
   pull_request:
     types:
-    - synchronize
-    - opened
-# The latest commit is the one that will be used to create the PR environment and deploy to production
+      - synchronize
+      - opened
+  # Required if using required approvers to automate deployments
+  pull_request_review:
+    types:
+      - edited
+      - submitted
+      - dismissed
+  issue_comment:
+    types:
+      - created
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
@@ -14,23 +23,24 @@ jobs:
     name: SQLMesh Actions Workflow
     runs-on: ubuntu-latest
     permissions:
-      # Required to access code in PR
       contents: write
-      # Required to post comments
       issues: write
-      # Required to update check runs
       checks: write
-      # Required to merge
       pull-requests: write
     steps:
       - name: Setup Python
         uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          ref: refs/pull/${{ github.event.issue.pull_request && github.event.issue.number || github.event.pull_request.number  }}/merge
+          ref: refs/pull/${{ github.event.issue.pull_request && github.event.issue.number || github.event.pull_request.number }}/merge
       - name: Install SQLMesh + Dependencies
         run: pip install -r requirements.txt
+        shell: bash
+      - name: Update SQLMesh
+        run: sqlmesh migrate
         shell: bash
       - name: Run CI/CD Bot
         run: |

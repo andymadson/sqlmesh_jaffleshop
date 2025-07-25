@@ -80,7 +80,6 @@ final as (
 
 select * from final
 JINJA_END;;
-
 AUDIT (
   name relationships_orders_customer_id__customer_id__ref_customers_
 );
