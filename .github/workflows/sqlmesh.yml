@@ -35,7 +35,7 @@ jobs:
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          ref: refs/pull/${{ github.event.issue.pull_request && github.event.issue.number || github.event.pull_request.number }}/merge
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
       - name: Install SQLMesh + Dependencies
         run: pip install -r requirements.txt
         shell: bash
