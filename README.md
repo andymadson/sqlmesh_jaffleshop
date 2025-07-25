@@ -1,2 +1,2 @@
-# sqlmesh-jaffle_shop
+# sqlmesh-jaffle-shop
 
