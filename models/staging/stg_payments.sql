@@ -1,6 +1,6 @@
 MODEL (
   name main.stg_payments,
-  start '2025-01-01',
+  start '2018-01-01',
   dialect duckdb,
   grain payment_id,
   depends_on (

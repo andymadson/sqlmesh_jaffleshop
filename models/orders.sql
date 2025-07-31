@@ -1,7 +1,7 @@
 /* This table has basic information about orders, as well as some derived facts based on payments */
 MODEL (
   name main.orders,
-  start '2025-01-01',
+  start '2018-01-01',
   dialect duckdb,
   kind FULL,
   depends_on (main.customers, main.stg_orders, main.stg_payments),

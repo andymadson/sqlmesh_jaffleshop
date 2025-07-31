@@ -1,6 +1,6 @@
 MODEL (
   name main.stg_customers,
-  start '2025-01-01',
+  start '2018-01-01',
   dialect duckdb,
   depends_on (
     main.raw_customers
